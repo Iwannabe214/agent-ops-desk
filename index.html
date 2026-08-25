@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="智能体平台运营后台模拟系统：账号、应用审核、用户问题闭环、数据周报与FAQ管理。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="AgentOps Desk｜智能体平台运营后台" />
+  <meta property="og:description" content="覆盖账号权限、应用治理、问题闭环、FAQ和数据复盘的智能体平台运营流程演示。" />
+  <meta property="og:image" content="assets/agentops-social-preview.png" />
+  <meta property="og:image:alt" content="AgentOps Desk智能体平台运营后台项目预览" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AgentOps Desk｜智能体平台运营后台" />
+  <meta name="twitter:description" content="账号权限、应用治理、问题闭环与数据复盘的一体化运营工作台。" />
+  <meta name="twitter:image" content="assets/agentops-social-preview.png" />
+  <title>AgentOps Desk｜智能体平台运营后台</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="styles.css?v=17" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">A</div>
+        <div>
+          <strong>AgentOps Desk</strong>
+          <span>智能体平台运营后台</span>
+        </div>
+      </div>
+
+      <nav class="nav-list" aria-label="主要导航">
+        <button class="nav-item active" data-view="dashboard"><span>01</span>运营总览</button>
+        <button class="nav-item" data-view="accounts"><span>02</span>账号开通</button>
+        <button class="nav-item" data-view="applications"><span>03</span>应用审核</button>
+        <button class="nav-item" data-view="tickets"><span>04</span>问题闭环</button>
+        <button class="nav-item" data-view="analytics"><span>05</span>数据周报</button>
+        <button class="nav-item" data-view="faq"><span>06</span>FAQ管理</button>
+        <button class="nav-item" data-view="audit"><span>07</span>操作日志</button>
+        <button class="nav-item" data-view="guide"><span>08</span>使用指南</button>
+      </nav>
+
+      <div class="sidebar-note">
+        <span class="demo-dot"></span>
+        <div>
+          <strong>本地演示环境</strong>
+          <p>操作仅保存在当前浏览器</p>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">OPERATIONS WORKSPACE</p>
+          <h1 id="page-title">运营总览</h1>
+        </div>
+        <div class="top-actions">
+          <span class="date-pill" id="today-label"></span>
+          <button class="button ghost" id="reset-demo">重置演示数据</button>
+        </div>
+      </header>
+
+      <div class="demo-banner">
+        <strong>演示数据：</strong>页面中的用户、应用及运营指标均为虚构数据，不代表真实企业运营情况；操作结果仅保存在当前浏览器。
+      </div>
+
+      <section class="view active" id="dashboard-view">
+        <div class="metric-grid" id="metric-grid"></div>
+
+        <div class="two-column">
+          <article class="panel span-two">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">USAGE TREND</p>
+                <h2>近14日平台调用趋势</h2>
+              </div>
+              <span class="subtle">模拟调用数据</span>
+            </div>
+            <div class="bar-chart" id="usage-chart" aria-label="近14日调用趋势柱状图"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">TODO</p>
+                <h2>今日运营待办</h2>
+              </div>
+            </div>
+            <div class="todo-list" id="todo-list"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">RISK</p>
+                <h2>重点问题</h2>
+              </div>
+            </div>
+            <div class="risk-list" id="risk-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="accounts-view">
+        <div class="section-heading">
+          <div>
+            <p class="panel-kicker">ACCOUNT PROVISIONING</p>
+            <h2>账号申请与权限开通</h2>
+            <p>核验申请信息、使用目的和权限范围，保留审批结果。</p>
+          </div>
+          <button class="button primary" id="add-account-button">新增申请</button>
+        </div>
+        <article class="panel table-panel">
+          <div class="table-toolbar">
+            <label class="search-box">搜索<input id="account-search" placeholder="姓名 / 部门 / 用途" /></label>
+            <select id="account-status-filter" aria-label="账号状态筛选">
+              <option value="all">全部状态</option>
+              <option value="待审核">待审核</option>
+              <option value="已开通">已开通</option>
+              <option value="已驳回">已驳回</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>申请人</th><th>部门</th><th>申请用途</th><th>权限范围</th><th>提交时间</th><th>状态</th><th>操作</th></tr></thead>
+              <tbody id="account-table"></tbody>
+            </table>
+          </div>
+          <div class="pagination" id="accounts-pagination" aria-label="账号列表分页"></div>
+        </article>
+      </section>
+
+      <section class="view" id="applications-view">
+        <div class="section-heading">
+          <div>
+            <p class="panel-kicker">APPLICATION GOVERNANCE</p>
+            <h2>Agent / Skill审核与上下架</h2>
+            <p>从场景完整性、功能可用性、内容质量和风险边界进行审核。</p>
+          </div>
+          <button class="button primary" id="add-application-button">提交应用</button>
+        </div>
+        <article class="panel table-panel">
+          <div class="table-toolbar">
+            <label class="search-box">搜索<input id="app-search" placeholder="应用 / 提交人 / 场景" /></label>
+            <select id="app-status-filter" aria-label="应用状态筛选">
+              <option value="all">全部状态</option>
+              <option value="待审核">待审核</option>
+              <option value="已通过">已通过</option>
+              <option value="待整改">待整改</option>
+              <option value="已上架">已上架</option>
+              <option value="已下架">已下架</option>
+              <option value="已驳回">已驳回</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>应用</th><th>类型</th><th>提交人</th><th>场景</th><th>测试通过率</th><th>审核得分</th><th>风险</th><th>状态</th><th>操作</th></tr></thead>
+              <tbody id="application-table"></tbody>
+            </table>
+          </div>
+          <div class="pagination" id="applications-pagination" aria-label="应用列表分页"></div>
+        </article>
+      </section>
+
+      <section class="view" id="tickets-view">
+        <div class="section-heading">
+          <div>
+            <p class="panel-kicker">ISSUE CLOSURE</p>
+            <h2>用户问题分类与闭环</h2>
+            <p>收集问题、复现定位、判断优先级、跟踪处理并反馈结果。</p>
+          </div>
+          <div class="button-row">
+            <button class="button ghost" id="export-tickets">导出当前问题CSV</button>
+            <button class="button ghost" id="export-followups">导出当前协作CSV</button>
+            <button class="button primary" id="add-ticket-button">登记问题</button>
+          </div>
+        </div>
+        <article class="panel table-panel">
+          <div class="table-toolbar wrap-toolbar">
+            <label class="search-box">搜索<input id="ticket-search" placeholder="编号 / 用户 / 问题" /></label>
+            <select id="ticket-category-filter" aria-label="问题类型筛选"><option value="all">全部类型</option></select>
+            <select id="ticket-priority-filter" aria-label="优先级筛选">
+              <option value="all">全部优先级</option><option>P0</option><option>P1</option><option>P2</option><option>P3</option>
+            </select>
+            <select id="ticket-status-filter" aria-label="问题状态筛选"><option value="all">全部状态</option></select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>编号</th><th>用户与问题</th><th>类型</th><th>优先级</th><th>负责人 / 协作</th><th>状态</th><th>SLA</th><th>反馈 / 承诺</th><th>处理</th></tr></thead>
+              <tbody id="ticket-table"></tbody>
+            </table>
+          </div>
+          <div class="pagination" id="tickets-pagination" aria-label="问题列表分页"></div>
+        </article>
+      </section>
+
+      <section class="view" id="analytics-view">
+        <div class="section-heading">
+          <div>
+            <p class="panel-kicker">WEEKLY REPORT</p>
+            <h2>运营数据与周报</h2>
+            <p>统一统计口径，结合平台记录与人工台账核验结论。</p>
+          </div>
+          <div class="button-row">
+            <select id="analytics-range" aria-label="数据统计范围">
+              <option value="7">近7天</option>
+              <option value="30">近30天</option>
+              <option value="60" selected>近60天</option>
+            </select>
+            <button class="button ghost" id="regenerate-metrics">重新生成60天数据</button>
+            <button class="button ghost" id="export-metrics">导出当前指标CSV</button>
+            <button class="button ghost" id="export-applications">导出当前应用CSV</button>
+            <a class="button ghost" id="download-initial-workbook" href="assets/智能体平台运营分析-初始数据-v2.xlsx" download>下载初始数据Excel</a>
+            <button class="button primary" id="download-report">下载60日简报.md</button>
+          </div>
+        </div>
+
+        <div class="export-note"><strong>导出说明：</strong>CSV和简报使用当前浏览器中的最新操作数据；Excel用于展示初始模拟数据的公式、图表与统计口径。</div>
+
+        <div class="metric-grid compact" id="analytics-metrics"></div>
+
+        <article class="panel verification-panel">
+          <div class="panel-head">
+            <div><p class="panel-kicker">REPORT VERIFICATION</p><h2>周报发布前人工核验</h2><p>AI只生成初稿；勾选代表你已亲自检查对应项目，全部完成后才能下载正式简报。</p></div>
+            <span class="badge amber" id="verification-status">待核验</span>
+          </div>
+          <div class="verification-grid">
+            <label class="verification-item"><input type="checkbox" data-report-check /><span><strong>统计范围</strong><small>确认当前选择的是7、30或60天，起止日期无误。</small></span></label>
+            <label class="verification-item"><input type="checkbox" data-report-check /><span><strong>数据来源</strong><small>确认调用量、用户数和问题台账来自约定的数据源。</small></span></label>
+            <label class="verification-item"><input type="checkbox" data-report-check /><span><strong>异常与缺失值</strong><small>检查极端波动、空值、重复记录和测试数据。</small></span></label>
+            <label class="verification-item"><input type="checkbox" data-report-check /><span><strong>指标口径</strong><small>确认闭环率、SLA和处理时长的分子分母一致。</small></span></label>
+            <label class="verification-item"><input type="checkbox" data-report-check /><span><strong>AI结论复核</strong><small>确认周报没有补充不存在的数据或夸大因果关系。</small></span></label>
+            <label class="verification-item"><input type="checkbox" data-report-check /><span><strong>隐私脱敏</strong><small>确认不包含真实姓名、联系方式、密钥和内部链接。</small></span></label>
+          </div>
+          <div class="verification-footer">
+            <label class="reviewer-field">核验人<input id="report-reviewer" placeholder="例如：运营-小林" /></label>
+            <p id="verification-hint">还需完成6项核验并填写核验人。</p>
+          </div>
+        </article>
+
+        <div class="two-column analytics-layout">
+          <article class="panel">
+            <div class="panel-head"><div><p class="panel-kicker">DISTRIBUTION</p><h2>问题类型分布</h2></div></div>
+            <div class="distribution-list" id="category-distribution"></div>
+          </article>
+          <article class="panel report-panel">
+            <div class="panel-head"><div><p class="panel-kicker">REPORT PREVIEW</p><h2>运营摘要预览</h2></div></div>
+            <textarea id="report-preview" aria-label="周报内容预览"></textarea>
+          </article>
+        </div>
+
+        <article class="panel table-panel health-panel">
+          <div class="panel-head health-head">
+            <div><p class="panel-kicker">APPLICATION HEALTH</p><h2>Agent / Skill运营健康度</h2><p>结合调用量、成功率、负反馈、知识库未命中和人工介入判断下一步动作；指标由模拟规则生成，仅用于展示分析方法，不要求与平台总调用量相加。</p></div>
+            <span class="subtle" id="application-health-range">近60日模拟数据</span>
+          </div>
+          <div class="metric-grid compact health-metrics" id="application-health-metrics"></div>
+          <div class="table-wrap">
+            <table class="health-table">
+              <thead><tr><th>应用</th><th>状态</th><th>调用量</th><th>成功率</th><th>负反馈率</th><th>知识库未命中</th><th>人工介入</th><th>健康判断与动作</th></tr></thead>
+              <tbody id="application-health-table"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section class="view" id="faq-view">
+        <div class="section-heading">
+          <div>
+            <p class="panel-kicker">KNOWLEDGE BASE</p>
+            <h2>FAQ与使用指引</h2>
+            <p>将高频问题转化为可复用文档，减少重复咨询。</p>
+          </div>
+          <button class="button primary" id="add-faq-button">新增FAQ</button>
+        </div>
+        <div class="faq-grid" id="faq-grid"></div>
+      </section>
+
+      <section class="view" id="audit-view">
+        <div class="section-heading">
+          <div>
+            <p class="panel-kicker">AUDIT TRAIL</p>
+            <h2>运营操作日志</h2>
+            <p>记录账号审批、应用上下架和问题状态变化，确保过程可追溯。</p>
+          </div>
+        </div>
+        <article class="panel">
+          <div class="timeline" id="audit-timeline"></div>
+        </article>
+      </section>
+
+      <section class="view" id="guide-view">
+        <div class="section-heading">
+          <div>
+            <p class="panel-kicker">ONBOARDING & ENABLEMENT</p>
+            <h2>使用指南与平台介绍材料</h2>
+            <p>第一次打开平台时，从这里理解核心术语、判断标准和建议操作顺序。</p>
+          </div>
+          <button class="button primary" id="download-guide">下载平台使用说明.md</button>
+        </div>
+
+        <div class="guide-hero">
+          <div><span class="guide-number">01</span><strong>这不是一个聊天机器人</strong><p>它模拟的是智能体平台上线后的运营工作：管账号、审应用、接问题、推闭环、做复盘。</p></div>
+          <div><span class="guide-number">02</span><strong>演示数据与真实业务隔离</strong><p>页面数据用于功能体验，不包含真实用户、内部资料或经营数据。</p></div>
+          <div><span class="guide-number">03</span><strong>按运营流程操作</strong><p>总览 → 账号 → 应用审核 → 问题闭环 → FAQ → 数据周报，形成完整工作链路。</p></div>
+        </div>
+
+        <div class="two-column guide-layout">
+          <article class="panel">
+            <div class="panel-head"><div><p class="panel-kicker">TERMS</p><h2>小白术语表</h2></div></div>
+            <div class="term-list">
+              <div><strong>Agent / 智能体</strong><p>能够围绕一个任务使用知识和工具完成工作的AI应用。</p></div>
+              <div><strong>Skill</strong><p>智能体能够调用的一项具体能力，例如生成周报或查询知识库。</p></div>
+              <div><strong>知识库</strong><p>提供给AI查询的产品手册、FAQ、制度或业务文档。</p></div>
+              <div><strong>意图识别</strong><p>判断用户一句话背后真正想完成什么任务。</p></div>
+              <div><strong>SLA</strong><p>不同严重程度的问题，规定最晚多久必须首次响应。</p></div>
+              <div><strong>闭环</strong><p>从收到问题到定位、处理、验证、反馈用户并正式关闭。</p></div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head"><div><p class="panel-kicker">PRIORITY</p><h2>P0—P3与首次响应</h2></div></div>
+            <div class="priority-guide">
+              <div><span class="badge priority-P0">P0 · 15分钟</span><p>平台大面积不可用、严重安全或数据风险，立即升级处理。</p></div>
+              <div><span class="badge priority-P1">P1 · 2小时</span><p>影响多个用户或关键业务，需要快速协调和持续同步。</p></div>
+              <div><span class="badge priority-P2">P2 · 24小时</span><p>影响有限、有替代方案，按正常问题流程处理。</p></div>
+              <div><span class="badge priority-P3">P3 · 48小时</span><p>低影响咨询、体验优化或需求建议，进入排期评估。</p></div>
+            </div>
+          </article>
+
+          <article class="panel span-two">
+            <div class="panel-head"><div><p class="panel-kicker">QUICK START</p><h2>建议操作顺序</h2></div></div>
+            <div class="demo-flow">
+              <div><span>1</span><strong>运营总览</strong><p>判断今天先处理什么。</p></div>
+              <div><span>2</span><strong>账号审批</strong><p>核验用途、最小权限和期限。</p></div>
+              <div><span>3</span><strong>应用审核</strong><p>根据证据评分并检查一票否决。</p></div>
+              <div><span>4</span><strong>问题闭环</strong><p>响应、复现、协作、验证和反馈。</p></div>
+              <div><span>5</span><strong>FAQ沉淀</strong><p>把已验证问题转成标准答案。</p></div>
+              <div><span>6</span><strong>数据复盘</strong><p>核对口径后下载周报。</p></div>
+            </div>
+          </article>
+
+          <article class="panel span-two">
+            <div class="panel-head"><div><p class="panel-kicker">OPERATION MAP</p><h2>平台能力与运营职责</h2></div></div>
+            <div class="jd-map">
+              <div><strong>账号与权限运营</strong><span>账号申请、角色、权限范围、有效期和审批留痕</span></div>
+              <div><strong>Agent / Skill治理</strong><span>测试证据、评分审核、一票否决、整改和上下架</span></div>
+              <div><strong>用户社群支持</strong><span>反馈渠道、首次回复、问题分类、SLA和用户反馈</span></div>
+              <div><strong>跨部门推进</strong><span>协作人、阻塞点、承诺日期、跟进结果和下一步</span></div>
+              <div><strong>数据与周报</strong><span>Excel经验迁移、统计口径、异常检查和人工核验</span></div>
+              <div><strong>推广与使用指引</strong><span>本页及可下载的平台介绍、术语说明和操作材料</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="form-dialog">
+    <form id="dynamic-form">
+      <div class="dialog-head">
+        <div><p class="panel-kicker" id="dialog-kicker">NEW RECORD</p><h2 id="dialog-title">新增记录</h2></div>
+        <button type="button" class="icon-button" data-dialog-close aria-label="关闭">×</button>
+      </div>
+      <div class="dialog-body" id="dialog-fields"></div>
+      <p class="dialog-error" id="dialog-error" role="alert" hidden></p>
+      <div class="dialog-actions">
+        <button type="button" class="button ghost" data-dialog-close>取消</button>
+        <button type="submit" class="button primary" id="dialog-submit">保存</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js?v=17"></script>
+</body>
+</html>
